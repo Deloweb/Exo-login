@@ -12,10 +12,13 @@ $twig = new \Twig\Environment($loader, [
     'debug' => true,
     // activation du mode de variables strictes
     'strict_variables' => true,
-]);
-
-// chargement de l'extension Twig_Extension_Debug
-$twig->addExtension(new \Twig\Extension\DebugExtension());
+    ]);
+    
+    // chargement de l'extension Twig_Extension_Debug
+    $twig->addExtension(new \Twig\Extension\DebugExtension());
+    
+    session_start();
+$user = require __DIR__.'/user-data.php';
 
 $formData = [
     'login' => '',
@@ -44,6 +47,11 @@ if ($_POST) {
     } elseif (strlen($_POST['login']) > 100) {
         $errors['login'] = true;
         $messages['login'] = "Le nom d'utilisateur doit faire 100 caractères maximum";
+    } elseif ($_POST['login'] !== $user['login']) {
+        $errors['login'] = true;
+        $errors['password'] = true;
+        $messages['login'] = "Identifiant ou mot de passe incorrect";
+        $messages['password'] = "Identifiant ou mot de passe incorrect";
     }
 
     if (!isset($_POST['password']) || empty($_POST['password'])) {
@@ -55,9 +63,7 @@ if ($_POST) {
     } elseif (strlen($_POST['password']) > 100) {
         $errors['password'] = true;
         $messages['password'] = "Le mot de passe doit faire 100 caractères maximum";
-    }
-
-    if ($_POST['login'] !== 'toto' || $_POST['password'] !== '12345678') {
+    } elseif ($_POST['password'] !== $user['user_id']) {
         $errors['login'] = true;
         $errors['password'] = true;
         $messages['login'] = "Identifiant ou mot de passe incorrect";
@@ -66,21 +72,17 @@ if ($_POST) {
     
     if (!$errors) {
         $_SESSION['login'] = $formData['login'];
-        $_SESSION['user_id'] = $formData['password'];
-        $user['user_id'] = $_SESSION['user_id'];
-        $user['login'] = $_SESSION['login'];
-    
+        $_SESSION['user_id'] = $formData['password'];    
 
-        $url = 'login-private-twig.php';
+        $url = 'private.php';
         header("Location: {$url}", true, 302);
         exit();
     }
 }
 
-session_start();
 
 // affichage du rendu d'un template
-echo $twig->render('login-twig.html.twig', [
+echo $twig->render('login.html.twig', [
     // transmission de données au template
     'errors' => $errors,
     'messages' => $messages,

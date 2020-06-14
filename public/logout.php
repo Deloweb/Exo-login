@@ -19,25 +19,16 @@ $twig->addExtension(new \Twig\Extension\DebugExtension());
 
 // démarrage de la session
 session_start();
+// suppression de toutes les données de la session
+session_unset();
+// suppression de la session
+session_destroy();
 
-$user = require __DIR__.'/user-data.php';
-
-echo $user['login'];
-
-// if (!isset($user['user_id'])) {
-//     $url = 'login-twig.php';
-//     header("Location: {$url}", true, 302);
-//     exit();
-// }
-
-// if (isset($user['login'])) {
-//     echo "l'utilisateur est connecté";
-// } else {
-//     echo "l'utilisateur n'est pas connecté";
-// }
+    $url = 'login.php';
+    header("Location: {$url}", true, 302);
+    exit();
 
 // affichage du rendu d'un template
-echo $twig->render('login-private-twig.html.twig', [
+echo $twig->render('logout.html.twig', [
     // transmission de données au template
-    
 ]);

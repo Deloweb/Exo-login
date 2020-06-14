@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Private</title>
+  </head>
+  <body>
+    <h1>Page privée</h1>
+    {# vérification de l'existence de la clé 'foo' dans le tableau session #}
+    {% if session.login is defined %}
+        {# affichage de la valeur associé à la clé 'foo' dans le tableau session #}
+        <p>Hello {{ session.login }}</p>
+    {% endif %}
+        <a href="logout.php">Se déconnecter</a>
+    </p>
+  </body>
+</html>
